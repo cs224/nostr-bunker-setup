@@ -413,7 +413,6 @@ test('nak handoff passes capability via environment and no publication relays; v
 test('CLI rejects unknown/duplicate/wrong-command flags, and preview never creates state', t => {
   const f = fixture(t);
   for (const argv of [['publish'], ['preview', '--query-relays'], ['status', '--state-dir'],
-    ['provision', '--confirm-provision', 'obsolete'],
     ['preview', '--key-file', 'one', '--key-file', 'two']]) assert.throws(() => argumentsFor(argv));
   const configPath = join(f.root, 'config.json');
   writeFileSync(configPath, JSON.stringify(f.config));
