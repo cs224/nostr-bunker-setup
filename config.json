@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "coordinator": "wss://promenade.fiatjaf.com",
+  "threshold": 2,
+  "reply_relays": ["wss://nostr.mom", "wss://relay.damus.io", "wss://nos.lol"],
+  "timeout_ms": 45000,
+  "signers": [
+    {
+      "pubkey": "aa4f53d8041b88adee44cefb62fb49fdeb85d151d1a346e655850c213508ed2e",
+      "inbox_relays": ["wss://relay.damus.io", "wss://nos.lol"]
+    },
+    {
+      "pubkey": "23a3ff76766f5ffc852fa6f2fc5058c1306ee25927632e0f8e213af11a5b8de5",
+      "inbox_relays": ["wss://relay.primal.net", "wss://relay.nsec.app"]
+    },
+    {
+      "pubkey": "3fcd012e970d9dfba4bc638ae9b6420e2ceca76f3b8e31d0ee3f408023a7c5fd",
+      "inbox_relays": ["wss://r.f7z.io", "wss://relay.primal.net"]
+    }
+  ]
+}

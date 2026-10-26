@@ -1,0 +1,17 @@
+{
+  "name": "nostr-promenade-bunker-setup",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Explicit, resumable provisioning of a 2-of-3 Promenade Nostr bunker",
+  "type": "module",
+  "engines": {"node": ">=24"},
+  "dependencies": {
+    "@fiatjaf/promenade-trusted-dealer": "npm:@jsr/fiatjaf__promenade-trusted-dealer@0.4.3",
+    "@nostr/tools": "npm:@jsr/nostr__tools@2.16.2"
+  },
+  "scripts": {
+    "help": "node bunker.mjs help",
+    "preview": "node bunker.mjs preview",
+    "test": "node --test test/bunker.test.mjs"
+  }
+}
