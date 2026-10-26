@@ -251,12 +251,12 @@ export class RelayTransport {
 }
 
 export async function provision(options) {
-  const {key, config, expectedNpub, directory, confirm, keyBackedUp,
+  const {key, config, expectedNpub, directory, keyBackedUp,
     acceptRemoteSigners, acceptCoordinatorAckOnly, resumePreflight = false, resumeUnsent = false,
     makeTransport = () => new RelayTransport(), mineEvent = mine, progress = () => {}} = options;
   const plan = preview(key, config, expectedNpub);
-  if (confirm !== plan.npub || !keyBackedUp || !acceptRemoteSigners) {
-    throw new BunkerError('Provision requires exact --confirm-provision, --key-backed-up, and --accept-remote-signers.');
+  if (!keyBackedUp || !acceptRemoteSigners) {
+    throw new BunkerError('Provision requires --key-backed-up and --accept-remote-signers.');
   }
   if (acceptCoordinatorAckOnly !== true) {
     throw new BunkerError('Provision requires --accept-coordinator-ack-only: existing remote setups cannot be checked; publication acknowledgement is not a signing test.');
@@ -441,7 +441,7 @@ export function argumentsFor(argv) {
   const command = argv[0] || 'help';
   if (!['help', 'preview', 'provision', 'status', 'sign-check'].includes(command)) throw new BunkerError('Unknown command.');
   const booleans = ['key-backed-up', 'accept-remote-signers', 'accept-coordinator-ack-only', 'resume-preflight', 'resume-unsent', 'query-relays'];
-  const strings = ['key-file', 'expect-npub', 'config', 'state-dir', 'confirm-provision', 'confirm-remote-sign'];
+  const strings = ['key-file', 'expect-npub', 'config', 'state-dir', 'confirm-remote-sign'];
   const options = {};
   for (let i = 1; i < argv.length; i++) {
     const name = argv[i].slice(2);
@@ -452,7 +452,7 @@ export function argumentsFor(argv) {
   }
   const allowed = {
     help: [], preview: ['key-file', 'expect-npub', 'config'],
-    provision: ['key-file', 'expect-npub', 'config', 'state-dir', 'confirm-provision', 'key-backed-up', 'accept-remote-signers', 'accept-coordinator-ack-only', 'resume-preflight', 'resume-unsent'],
+    provision: ['key-file', 'expect-npub', 'config', 'state-dir', 'key-backed-up', 'accept-remote-signers', 'accept-coordinator-ack-only', 'resume-preflight', 'resume-unsent'],
     status: ['state-dir', 'query-relays'], 'sign-check': ['state-dir', 'confirm-remote-sign'],
   }[command];
   if (Object.keys(options).some(name => !allowed.includes(name))) throw new BunkerError('Option not supported by this command.');
@@ -464,7 +464,7 @@ export async function main(argv) {
   if (command === 'help') {
     console.log('Promenade distributed-bunker setup helper (Node 24+).\n' +
       'preview --key-file ABS --expect-npub NPUB [--config FILE]\n' +
-      'provision --key-file ABS --expect-npub NPUB --state-dir ABS --confirm-provision NPUB --key-backed-up --accept-remote-signers --accept-coordinator-ack-only [--resume-preflight | --resume-unsent] [--config FILE]\n' +
+      'provision --key-file ABS --expect-npub NPUB --state-dir ABS --key-backed-up --accept-remote-signers --accept-coordinator-ack-only [--resume-preflight | --resume-unsent] [--config FILE]\n' +
       'status --state-dir ABS [--query-relays]\n' +
       'sign-check --state-dir ABS --confirm-remote-sign NPUB\n' +
       'Private files/state must be outside Git/build, mode 600/700. No command runs during builds.');
@@ -486,7 +486,7 @@ export async function main(argv) {
     else {
       if (!o['state-dir']) throw new BunkerError('--state-dir is required.');
       const result = await provision({key, config, expectedNpub: plan.npub, directory: o['state-dir'],
-        confirm: o['confirm-provision'], keyBackedUp: o['key-backed-up'], acceptRemoteSigners: o['accept-remote-signers'],
+        keyBackedUp: o['key-backed-up'], acceptRemoteSigners: o['accept-remote-signers'],
         acceptCoordinatorAckOnly: o['accept-coordinator-ack-only'], resumePreflight: o['resume-preflight'],
         resumeUnsent: o['resume-unsent'],
         progress: item => console.error(JSON.stringify(item))});

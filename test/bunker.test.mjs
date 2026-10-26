@@ -63,7 +63,7 @@ function fixture(t) {
     },
     close() { calls.push(['close']); },
   };
-  const options = {key, config, expectedNpub: npub, directory, confirm: npub,
+  const options = {key, config, expectedNpub: npub, directory,
     keyBackedUp: true, acceptRemoteSigners: true, acceptCoordinatorAckOnly: true,
     makeTransport: () => transport,
     // No real PoW/network in lifecycle unit tests; real PoW is tested separately below.
@@ -128,9 +128,9 @@ test('config rejects ambiguous destinations, duplicates, credentials, and invali
   }
 });
 
-test('missing confirmation/backup/remote-signer consent prevents any state or network action', async t => {
+test('missing consent or a mismatched identity prevents any state or network action', async t => {
   const f = fixture(t);
-  for (const change of [{confirm: 'yes'}, {keyBackedUp: false}, {acceptRemoteSigners: false},
+  for (const change of [{keyBackedUp: false}, {acceptRemoteSigners: false},
     {acceptCoordinatorAckOnly: false}, {expectedNpub: 'wrong'}]) {
     await assert.rejects(provision({...f.options, ...change}));
   }
@@ -413,6 +413,7 @@ test('nak handoff passes capability via environment and no publication relays; v
 test('CLI rejects unknown/duplicate/wrong-command flags, and preview never creates state', t => {
   const f = fixture(t);
   for (const argv of [['publish'], ['preview', '--query-relays'], ['status', '--state-dir'],
+    ['provision', '--confirm-provision', 'obsolete'],
     ['preview', '--key-file', 'one', '--key-file', 'two']]) assert.throws(() => argumentsFor(argv));
   const configPath = join(f.root, 'config.json');
   writeFileSync(configPath, JSON.stringify(f.config));

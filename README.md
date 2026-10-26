@@ -39,7 +39,6 @@ Provisioning sends enrollment records to the configured services. Keep the state
 ```bash
 node bunker.mjs provision --key-file /ABS/PATH/identity.hex --expect-npub YOUR_NPUB \
   --state-dir /ABS/PATH/private-state/attempt-1 \
-  --confirm-provision YOUR_NPUB \
   --key-backed-up \
   --accept-remote-signers \
   --accept-coordinator-ack-only
